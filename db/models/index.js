@@ -1,41 +1,49 @@
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../../config/database.js')[env];
+// const fs = require("fs");
+// const path = require("path");
+const Sequelize = require("sequelize");
+const process = require("process");
+// const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../../config/database.js")[env];
+const initUser = require("./user.js");
+const initBudget = require("./budget.js");
+const initIncomeExpense = require("./income-expense.js");
+const initTransaction = require("./transaction.js");
+const initCategory = require("./category.js");
 const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// initialise models
+db.User = initUser(sequelize);
+db.Budget = initBudget(sequelize);
+db.IncomeExpense = initIncomeExpense(sequelize);
+db.Transaction = initTransaction(sequelize);
+db.Category = initCategory(sequelize);
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+// user-category-incomeexpense
+db.User.belongsToMany(db.IncomeExpense, { through: db.Category });
+db.IncomeExpense.belongsToMany(db.User, { through: db.Category });
+
+// users-transaction-categories (M-M)
+db.User.belongsToMany(db.Category, { through: db.Transaction });
+db.Category.belongsToMany(db.User, { through: db.Transaction });
+
+// users-budget-category
+db.User.belongsToMany(db.Category, { through: db.Budget });
+db.Category.belongsToMany(db.User, { through: db.Budget });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
