@@ -10,9 +10,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-      },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -24,6 +21,10 @@ module.exports = {
       income_expense_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "income_expenses",
+          key: "id",
+        },
       },
       created_at: {
         allowNull: false,

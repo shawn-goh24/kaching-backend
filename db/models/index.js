@@ -9,9 +9,10 @@ const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../../config/database.js")[env];
 const initUser = require("./user.js");
 const initBudget = require("./budget.js");
-const initIncomeExpense = require("./income-expense.js");
+const initIncomeExpense = require("./income_expense.js");
 const initTransaction = require("./transaction.js");
 const initCategory = require("./category.js");
+const initUserCategory = require("./user_category.js");
 const db = {};
 
 let sequelize;
@@ -32,18 +33,49 @@ db.Budget = initBudget(sequelize);
 db.IncomeExpense = initIncomeExpense(sequelize);
 db.Transaction = initTransaction(sequelize);
 db.Category = initCategory(sequelize);
+db.UserCategory = initUserCategory(sequelize);
 
-// user-category-incomeexpense
-db.User.belongsToMany(db.IncomeExpense, { through: db.Category });
-db.IncomeExpense.belongsToMany(db.User, { through: db.Category });
+// IncomeExpense - Category (1-M)
+db.IncomeExpense.hasMany(db.Category, {
+  foreignKey: "incomeExpenseId",
+});
+db.Category.belongsTo(db.IncomeExpense);
 
-// users-transaction-categories (M-M)
-db.User.belongsToMany(db.Category, { through: db.Transaction });
-db.Category.belongsToMany(db.User, { through: db.Transaction });
+// User - Transaction (1-M)
+db.User.hasMany(db.Transaction, {
+  foreignKey: "userId",
+});
+db.Transaction.belongsTo(db.User);
 
-// users-budget-category
-db.User.belongsToMany(db.Category, { through: db.Budget });
-db.Category.belongsToMany(db.User, { through: db.Budget });
+// User - Budget (1-M)
+db.User.hasMany(db.Budget, {
+  foreignKey: "userId",
+});
+db.Budget.belongsTo(db.User);
+
+// User_Category (M-M)
+db.User.belongsToMany(db.Category, { through: db.UserCategory });
+db.Category.belongsToMany(db.User, { through: db.UserCategory });
+db.UserCategory.belongsTo(db.User);
+db.UserCategory.belongsTo(db.Category);
+
+// Budget - Category (1-M)
+db.Category.hasMany(db.Budget, {
+  foreignKey: "categoryId",
+});
+db.Budget.belongsTo(db.Category);
+// Budget - Category (1-1)
+// db.Budget.hasOne(db.Category);
+// db.Category.belongsTo(db.Budget);
+
+// Transaction - Category (1-1)
+db.Category.hasMany(db.Transaction, {
+  foreignKey: "categoryId",
+});
+db.Transaction.belongsTo(db.Category);
+// Transaction - Category (1-M)
+// db.Transaction.hasOne(db.Category);
+// db.Category.belongsTo(db.Transaction);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

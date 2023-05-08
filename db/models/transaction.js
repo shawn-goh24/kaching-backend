@@ -10,19 +10,27 @@ const initTransaction = (sequelize) =>
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      UserId: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
-      CategoryId: {
+      categoryId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        onDelete: "SET NULL",
+        references: {
+          model: "categories",
+          key: "id",
+        },
       },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      price: {
+      amount: {
         type: DataTypes.DECIMAL,
         allowNull: false,
       },

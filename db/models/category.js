@@ -10,9 +10,6 @@ const initCategory = (sequelize) =>
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      UserId: {
-        type: DataTypes.INTEGER,
-      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -21,9 +18,13 @@ const initCategory = (sequelize) =>
         type: DataTypes.STRING,
         allowNull: false,
       },
-      IncomeExpenseId: {
+      incomeExpenseId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "incomeExpenses",
+          key: "id",
+        },
       },
       createdAt: {
         type: DataTypes.DATE,

@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 
-const initBudget = (sequelize) =>
+const initUserCategory = (sequelize) =>
   sequelize.define(
-    "Budget",
+    "UserCategory",
     {
       id: {
         allowNull: false,
@@ -26,14 +26,6 @@ const initBudget = (sequelize) =>
           key: "id",
         },
       },
-      amount: {
-        type: DataTypes.DECIMAL,
-        allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
@@ -48,4 +40,4 @@ const initBudget = (sequelize) =>
     }
   );
 
-module.exports = initBudget;
+module.exports = initUserCategory;
