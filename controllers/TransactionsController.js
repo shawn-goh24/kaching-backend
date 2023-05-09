@@ -29,7 +29,10 @@ async function addTransaction(req, res) {
       amount: amount,
       date: date,
     });
-    return res.json(newTransaction);
+    const returnedData = await Transaction.findByPk(newTransaction.id, {
+      include: Category,
+    });
+    return res.json(returnedData);
   } catch (err) {
     return res.status(400).json({ error: true, msg: err });
   }
