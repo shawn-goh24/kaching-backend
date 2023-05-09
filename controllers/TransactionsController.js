@@ -1,4 +1,6 @@
 const db = require("../db/models/index");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const { User, Transaction, IncomeExpense, Budget, Category } = db;
 
@@ -12,6 +14,31 @@ async function getTransaction(req, res) {
         ["date", "DESC"],
         ["id", "DESC"],
       ],
+    });
+    return res.json(transactions);
+  } catch (err) {
+    return res.status(400).json({ error: true, msg: err });
+  }
+}
+
+async function getTransactionForMonth(req, res) {
+  const { userId, month, year } = req.params;
+  try {
+    const transactions = await Transaction.findAll({
+      where: {
+        userId: userId,
+        [Op.and]: [
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
+            month
+          ), // replace 4 with the month number you want to find
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
+            year
+          ), // replace 2023 with the year you want to find
+        ],
+      },
+      include: Category,
     });
     return res.json(transactions);
   } catch (err) {
@@ -39,13 +66,28 @@ async function addTransaction(req, res) {
 }
 
 async function editTransaction(req, res) {
+  const { userId, month, year } = req.params;
   try {
     let transactionToAdd = req.body;
     let transactionToReplace = req.params.transactionId;
     let transactionToEdit = await Transaction.findByPk(transactionToReplace);
     await transactionToEdit.update(transactionToAdd);
     console.log("here");
-    let allTransaction = await Transaction.findAll();
+    let allTransaction = await Transaction.findAll({
+      where: {
+        userId: userId,
+        [Op.and]: [
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
+            month
+          ), // replace 4 with the month number you want to find
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
+            year
+          ), // replace 2023 with the year you want to find
+        ],
+      },
+    });
     return res.json(allTransaction);
   } catch (err) {
     return res.status(400).json({ error: true, msg: err });
@@ -53,10 +95,25 @@ async function editTransaction(req, res) {
 }
 
 async function deleteTransaction(req, res) {
+  const { userId, month, year } = req.params;
   try {
     const { transactionId } = req.params;
     await Transaction.destroy({ where: { id: transactionId } });
-    let allTransaction = await Transaction.findAll();
+    let allTransaction = await Transaction.findAll({
+      where: {
+        userId: userId,
+        [Op.and]: [
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
+            month
+          ), // replace 4 with the month number you want to find
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
+            year
+          ), // replace 2023 with the year you want to find
+        ],
+      },
+    });
     return res.json(allTransaction);
   } catch (err) {
     return res.status(400).json({ error: true, msg: err });
@@ -68,4 +125,5 @@ module.exports = {
   editTransaction,
   deleteTransaction,
   getTransaction,
+  getTransactionForMonth,
 };
