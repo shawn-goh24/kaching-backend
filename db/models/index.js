@@ -74,7 +74,9 @@ db.Category.hasMany(db.Transaction, {
 });
 db.Transaction.belongsTo(db.Category);
 // Transaction - Category (1-M)
-// db.Transaction.hasOne(db.Category);
+// db.Transaction.hasOne(db.Category, {
+//   foreignKey: "categoryId",
+// });
 // db.Category.belongsTo(db.Transaction);
 
 db.sequelize = sequelize;

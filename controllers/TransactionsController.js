@@ -87,6 +87,7 @@ async function editTransaction(req, res) {
           ), // replace 2023 with the year you want to find
         ],
       },
+      include: Category,
     });
     return res.json(allTransaction);
   } catch (err) {
@@ -113,6 +114,7 @@ async function deleteTransaction(req, res) {
           ), // replace 2023 with the year you want to find
         ],
       },
+      include: Category,
     });
     return res.json(allTransaction);
   } catch (err) {

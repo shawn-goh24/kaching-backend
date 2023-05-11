@@ -36,6 +36,18 @@ async function getUser(req, res) {
     return res.status(400).json({ error: true, msg: err });
   }
 }
+// get user category
+async function getUserCategories(req, res) {
+  const { userId } = req.params;
+  try {
+    const user = await User.findByPk(userId, {
+      include: Category,
+    });
+    return res.json(user);
+  } catch (err) {
+    return res.status(400).json({ error: true, msg: err });
+  }
+}
 
 // base function
 // get all users in db
@@ -81,4 +93,5 @@ module.exports = {
   getAllIncomeExpense,
   getAllBudget,
   getUser,
+  getUserCategories,
 };

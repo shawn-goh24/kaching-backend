@@ -5,7 +5,8 @@ const router = express.Router();
 
 // get a single user based on ID w/ transactions
 router.post("/home", usersController.checkUser);
-router.get("/:userId", usersController.getUser);
+router.get("/transaction/:userId", usersController.getUser);
+router.get("/category/:userId", usersController.getUserCategories);
 
 router.get("/", usersController.getAllUser);
 router.get("/:userId/transaction", usersController.getAllTransaction);
