@@ -21,6 +21,27 @@ async function getTransaction(req, res) {
   }
 }
 
+async function getYearlyTransactions(req, res) {
+  const { userId, year } = req.params;
+  try {
+    const transactions = await Transaction.findAll({
+      where: {
+        userId: userId,
+        [Op.and]: [
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
+            year
+          ),
+        ],
+      },
+      include: Category,
+    });
+    return res.json(transactions);
+  } catch (err) {
+    return res.status(400).json({ error: true, msg: err });
+  }
+}
+
 async function getTransactionForMonth(req, res) {
   const { userId, month, year } = req.params;
   try {
@@ -31,11 +52,11 @@ async function getTransactionForMonth(req, res) {
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
             month
-          ), // replace 4 with the month number you want to find
+          ),
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
             year
-          ), // replace 2023 with the year you want to find
+          ),
         ],
       },
       include: Category,
@@ -128,4 +149,5 @@ module.exports = {
   deleteTransaction,
   getTransaction,
   getTransactionForMonth,
+  getYearlyTransactions,
 };

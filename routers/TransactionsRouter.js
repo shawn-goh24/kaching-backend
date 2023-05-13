@@ -5,6 +5,8 @@ const router = express.Router();
 
 // Get transactions from a user
 router.get("/:userId", transactionController.getTransaction);
+// Get transactions from a user for the year
+router.get("/:userId/:year", transactionController.getYearlyTransactions);
 // Get transactions from a user for the month
 router.get(
   "/:userId/:month/:year",
