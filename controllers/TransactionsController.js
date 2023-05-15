@@ -143,6 +143,31 @@ async function deleteTransaction(req, res) {
   }
 }
 
+async function getYtdTransactions(req, res) {
+  console.log("here");
+  const { userId, year, incomeExpenseId } = req.params;
+  try {
+    const transactions = await Transaction.findAll({
+      where: {
+        userId: userId,
+        [Op.and]: [
+          Sequelize.where(
+            Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
+            year
+          ),
+        ],
+      },
+      include: {
+        model: Category,
+        where: { incomeExpenseId: incomeExpenseId },
+      },
+    });
+    return res.json(transactions);
+  } catch (err) {
+    return res.status(400).json({ error: true, msg: err });
+  }
+}
+
 module.exports = {
   addTransaction,
   editTransaction,
@@ -150,4 +175,5 @@ module.exports = {
   getTransaction,
   getTransactionForMonth,
   getYearlyTransactions,
+  getYtdTransactions,
 };

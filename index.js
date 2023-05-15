@@ -16,6 +16,7 @@ const transactionsRouter = require("./routers/TransactionsRouter");
 const categoriesRouter = require("./routers/CategoriesRouter");
 const incomeExpensesRouter = require("./routers/IncomeExpensesRouter");
 const budgetsRouter = require("./routers/BudgetsRouter");
+const ytdRouter = require("./routers/YtdRouter");
 
 // enforce on all endpoints
 // get PORT from .env
@@ -31,6 +32,7 @@ app.use("/transaction", checkJwt, transactionsRouter);
 app.use("/category", checkJwt, categoriesRouter);
 app.use("/incomeexpense", checkJwt, incomeExpensesRouter);
 app.use("/budget", checkJwt, budgetsRouter);
+app.use("/ytd", checkJwt, ytdRouter);
 
 app.listen(PORT, () => {
   console.log(`Application listening to port ${PORT}`);
