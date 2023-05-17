@@ -49,6 +49,18 @@ async function getUserCategories(req, res) {
   }
 }
 
+async function updateUser(req, res) {
+  try {
+    let userToAdd = req.body;
+    let userToReplace = req.params.userId;
+    let userToEdit = await User.findByPk(userToReplace);
+    await userToEdit.update(userToAdd);
+    return res.json(userToEdit);
+  } catch (err) {
+    return res.status(400).json({ error: true, msg: err });
+  }
+}
+
 // base function
 // get all users in db
 async function getAllUser(req, res) {
@@ -94,4 +106,5 @@ module.exports = {
   getAllBudget,
   getUser,
   getUserCategories,
+  updateUser,
 };

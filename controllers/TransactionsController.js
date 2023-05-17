@@ -35,6 +35,10 @@ async function getYearlyTransactions(req, res) {
         ],
       },
       include: Category,
+      order: [
+        ["date", "DESC"],
+        ["id", "DESC"],
+      ],
     });
     return res.json(transactions);
   } catch (err) {

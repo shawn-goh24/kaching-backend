@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/home", usersController.checkUser);
 router.get("/transaction/:userId", usersController.getUser);
 router.get("/category/:userId", usersController.getUserCategories);
+router.put("/edit/:userId", usersController.updateUser);
 
 router.get("/", usersController.getAllUser);
 router.get("/:userId/transaction", usersController.getAllTransaction);
