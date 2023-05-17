@@ -13,6 +13,7 @@ const initIncomeExpense = require("./income_expense.js");
 const initTransaction = require("./transaction.js");
 const initCategory = require("./category.js");
 const initUserCategory = require("./user_category.js");
+const initBill = require("./bill.js");
 const db = {};
 
 let sequelize;
@@ -34,6 +35,7 @@ db.IncomeExpense = initIncomeExpense(sequelize);
 db.Transaction = initTransaction(sequelize);
 db.Category = initCategory(sequelize);
 db.UserCategory = initUserCategory(sequelize);
+db.Bill = initBill(sequelize);
 
 // IncomeExpense - Category (1-M)
 db.IncomeExpense.hasMany(db.Category, {
@@ -78,6 +80,12 @@ db.Transaction.belongsTo(db.Category);
 //   foreignKey: "categoryId",
 // });
 // db.Category.belongsTo(db.Transaction);
+
+// User - Bills (1-M)
+db.User.hasMany(db.Bill, {
+  foreignKey: "userId",
+});
+db.Bill.belongsTo(db.User);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
