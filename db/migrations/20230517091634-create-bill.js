@@ -26,6 +26,10 @@ module.exports = {
         type: Sequelize.DECIMAL,
         allowNull: false,
       },
+      interval: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       date: {
         type: Sequelize.DATE,
         allowNull: false,

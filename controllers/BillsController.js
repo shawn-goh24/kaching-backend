@@ -1,6 +1,7 @@
 const db = require("../db/models/index");
+var cron = require("node-cron");
 
-const { Bill } = db;
+const { Bill, Notification } = db;
 
 async function getBills(req, res) {
   const { userId } = req.params;
@@ -17,14 +18,29 @@ async function getBills(req, res) {
 }
 
 async function addBill(req, res) {
-  const { userId, name, date, amount } = req.body;
+  const { userId, name, date, amount, interval } = req.body;
   try {
     const newBill = await Bill.create({
       userId: userId,
       name: name,
       amount: amount,
       date: date,
+      interval: interval,
     });
+    const bill = JSON.parse(JSON.stringify(newBill));
+    if (bill.interval === "Monthly") {
+      const date = new Date(bill.date).getDate();
+      cron.schedule(`*/${date} * * * * *`, () => {
+        console.log("send email", bill.name, new Date().toLocaleTimeString());
+        sendNotification(
+          userId,
+          `${name} bill notice!`,
+          `Remember to pay your bill today`,
+          false,
+          new Date(bill.date)
+        );
+      });
+    }
     return res.json(newBill);
   } catch (err) {
     return res.status(400).json({ error: true, msg: err });
@@ -62,6 +78,22 @@ async function deleteBill(req, res) {
     return res.status(400).json({ error: true, msg: err });
   }
 }
+
+const sendNotification = async (userId, title, description, isRead, date) => {
+  try {
+    const newNotification = await Notification.create({
+      userId: userId,
+      title: title,
+      description: description,
+      isRead: isRead,
+      date: date,
+    });
+    // return res.json(newNotification);
+  } catch (err) {
+    console.log(err);
+    // return res.status(400).json({ error: true, msg: err });
+  }
+};
 
 module.exports = {
   getBills,

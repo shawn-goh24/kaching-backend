@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 
-const initBill = (sequelize) =>
+const initNotification = (sequelize) =>
   sequelize.define(
-    "Bill",
+    "Notification",
     {
       id: {
         allowNull: false,
@@ -18,20 +18,20 @@ const initBill = (sequelize) =>
           key: "id",
         },
       },
-      name: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      amount: {
-        type: DataTypes.DECIMAL,
+      description: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       date: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      interval: {
-        type: DataTypes.STRING,
+      isRead: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       createdAt: {
@@ -48,4 +48,4 @@ const initBill = (sequelize) =>
     }
   );
 
-module.exports = initBill;
+module.exports = initNotification;
