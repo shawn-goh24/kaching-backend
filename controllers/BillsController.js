@@ -1,5 +1,6 @@
 const db = require("../db/models/index");
 var cron = require("node-cron");
+const sgMail = require("@sendgrid/mail");
 
 const { Bill, Notification } = db;
 
@@ -18,7 +19,7 @@ async function getBills(req, res) {
 }
 
 async function addBill(req, res) {
-  const { userId, name, date, amount, interval } = req.body;
+  const { userId, name, date, amount, interval, user } = req.body;
   try {
     const newBill = await Bill.create({
       userId: userId,
@@ -31,14 +32,16 @@ async function addBill(req, res) {
     if (bill.interval === "Monthly") {
       const date = new Date(bill.date).getDate();
       cron.schedule(`*/${date} * * * * *`, () => {
-        console.log("send email", bill.name, new Date().toLocaleTimeString());
+        const message = `Remember to pay your ${name} bill today!`;
         sendNotification(
           userId,
           `${name} bill notice!`,
-          `Remember to pay your bill today`,
+          message,
           false,
           new Date(bill.date)
         );
+        sendEmail(user, message);
+        console.log("send email", bill.name, new Date().toLocaleTimeString());
       });
     }
     return res.json(newBill);
@@ -88,11 +91,31 @@ const sendNotification = async (userId, title, description, isRead, date) => {
       isRead: isRead,
       date: date,
     });
+    console.log("Notification sent!");
     // return res.json(newNotification);
   } catch (err) {
     console.log(err);
     // return res.status(400).json({ error: true, msg: err });
   }
+};
+
+const sendEmail = (user, message) => {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
+    to: user.email, // Change to your recipient
+    from: "ahshawngoh@gmail.com", // Change to your verified sender
+    subject: "Bill Reminder!!!",
+    text: `Hello ${user.firstName},\n\n${message}\n\nRegards,\nKaching Team `,
+    // html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+  };
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 module.exports = {
