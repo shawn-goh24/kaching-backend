@@ -26,6 +26,10 @@ module.exports = {
           key: "id",
         },
       },
+      default_category: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

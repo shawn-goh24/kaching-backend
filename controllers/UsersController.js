@@ -1,6 +1,7 @@
 const db = require("../db/models/index");
+const sequelize = require("sequelize");
 
-const { User, Transaction, IncomeExpense, Budget, Category } = db;
+const { User, Transaction, IncomeExpense, Budget, Category, UserCategory } = db;
 
 // user ? continue : add
 async function checkUser(req, res) {
@@ -11,16 +12,51 @@ async function checkUser(req, res) {
       defaults: {
         firstName: currUser.given_name,
         lastName: currUser.family_name,
+        imageUrl: currUser.picture,
       },
     });
 
+    // console.log(user.id);
+    // console.log(JSON.parse(JSON.stringify(user)));
     if (created) {
-      console.log(user);
+      const categoryData = await Category.findAll({
+        where: {
+          defaultCategory: true,
+        },
+      });
+      const categoryDataJson = JSON.parse(JSON.stringify(categoryData));
+      createTransaction(user.id, categoryDataJson);
     }
 
     return res.json(user);
   } catch (err) {
     return res.status(400).json({ error: true, msg: err });
+  }
+}
+
+async function createTransaction(userId, objects) {
+  // const transaction = await sequelize.Transaction();
+  console.log(userId, objects);
+  try {
+    // Create records for each object within the transaction
+    // await Promise.all(
+    await objects.map(async (object) => {
+      await UserCategory.create({
+        userId: userId,
+        categoryId: object.id,
+      });
+    });
+    // );
+
+    // Commit the transaction if all operations are successful
+    // await transaction.commit();
+
+    console.log("Transaction completed successfully.");
+  } catch (error) {
+    // Rollback the transaction if any error occurs
+    // await transaction.rollback();
+
+    console.error("Transaction failed:", error);
   }
 }
 

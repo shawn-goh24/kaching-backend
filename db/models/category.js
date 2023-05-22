@@ -26,6 +26,10 @@ const initCategory = (sequelize) =>
           key: "id",
         },
       },
+      defaultCategory: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
