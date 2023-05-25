@@ -64,6 +64,10 @@ async function getTransactionForMonth(req, res) {
         ],
       },
       include: Category,
+      order: [
+        ["date", "DESC"],
+        ["id", "DESC"],
+      ],
     });
     return res.json(transactions);
   } catch (err) {
