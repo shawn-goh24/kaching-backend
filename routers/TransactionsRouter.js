@@ -6,7 +6,7 @@ const router = express.Router();
 // Get transactions from a user
 router.get("/:userId", transactionController.getTransaction);
 
-// Get transactions from a user for the year
+// Get transactions from a user for the year - USED
 router.get("/:userId/:year", transactionController.getYearlyTransactions); //should change to query????
 
 // Get transactions from a user for the month // USED
@@ -21,16 +21,16 @@ router.get(
   transactionController.getYtdTransactions
 );
 
-// Add transaction
+// Add transaction - USED
 router.post("/add", transactionController.addTransaction);
 
-// Edit transaction
+// Edit transaction - USED
 router.put(
   "/edit/:userId/:transactionId/:month/:year",
   transactionController.editTransaction
 );
 
-// Delete transaction
+// Delete transaction - USED
 router.delete(
   "/delete/:userId/:transactionId/:month/:year",
   transactionController.deleteTransaction
