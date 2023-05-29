@@ -1,6 +1,6 @@
 const db = require("../db/models/index");
 
-const { User, Transaction, IncomeExpense, Budget, Category } = db;
+const { User, Transaction, IncomeExpense, Budget, Category, UserCategory } = db;
 
 // user ? continue : add
 async function checkUser(req, res) {
@@ -92,6 +92,18 @@ async function getAllBudget(req, res) {
     return res.status(400).json({ error: true, msg: err });
   }
 }
+
+const createTransaction = (id, categories) => {
+  // console.log(categories);
+  // console.log(id);
+  categories.forEach(async (category, index) => {
+    const newUserCategory = await UserCategory.create({
+      userId: id,
+      categoryId: category.id,
+    });
+  });
+  console.log("added");
+};
 
 module.exports = {
   getAllUser,
