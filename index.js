@@ -17,7 +17,6 @@ const transactionsRouter = require("./routers/TransactionsRouter");
 const categoriesRouter = require("./routers/CategoriesRouter");
 const incomeExpensesRouter = require("./routers/IncomeExpensesRouter");
 const budgetsRouter = require("./routers/BudgetsRouter");
-const ytdRouter = require("./routers/YtdRouter");
 const billRouter = require("./routers/BillsRouter");
 const notificationRouter = require("./routers/NotificationsRouter");
 
@@ -35,7 +34,6 @@ app.use("/transaction", checkJwt, transactionsRouter);
 app.use("/category", checkJwt, categoriesRouter);
 app.use("/incomeexpense", checkJwt, incomeExpensesRouter);
 app.use("/budget", checkJwt, budgetsRouter);
-app.use("/ytd", checkJwt, ytdRouter);
 app.use("/bill", checkJwt, billRouter);
 app.use("/notification", checkJwt, notificationRouter);
 

@@ -5,7 +5,6 @@ const router = express.Router();
 
 // get a single user based on ID w/ transactions
 router.post("/home", usersController.checkUser); // USED
-router.get("/transaction/:userId", usersController.getUser);
 router.get("/category/:userId", usersController.getUserCategories); // used, USED
 router.put("/edit/:userId", usersController.updateUser); //USED
 

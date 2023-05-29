@@ -2,23 +2,6 @@ const db = require("../db/models/index");
 
 const { Category, UserCategory } = db;
 
-async function getAllCategory(req, res) {
-  try {
-    const data = await Category.findAll({});
-    return res.json(data);
-  } catch (err) {
-    return res.status(400).json({ error: true, msg: err });
-  }
-}
-async function getAllUserCategory(req, res) {
-  try {
-    const data = await UserCategory.findAll({ include: Category });
-    return res.json(data);
-  } catch (err) {
-    return res.status(400).json({ error: true, msg: err });
-  }
-}
-
 async function newCategory(req, res) {
   const { name, color, incomeExpenseId } = req.body;
   try {
@@ -74,10 +57,8 @@ async function deleteCategory(req, res) {
 }
 
 module.exports = {
-  getAllCategory,
   newCategory,
   editCategory,
   deleteCategory,
   addUserCategory,
-  getAllUserCategory,
 };

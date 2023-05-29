@@ -1,7 +1,6 @@
 const db = require("../db/models/index");
-const sequelize = require("sequelize");
 
-const { User, Transaction, IncomeExpense, Budget, Category, UserCategory } = db;
+const { User, Transaction, IncomeExpense, Budget, Category } = db;
 
 // user ? continue : add
 async function checkUser(req, res) {
@@ -16,8 +15,6 @@ async function checkUser(req, res) {
       },
     });
 
-    // console.log(user.id);
-    // console.log(JSON.parse(JSON.stringify(user)));
     if (created) {
       const categoryData = await Category.findAll({
         where: {
@@ -34,44 +31,6 @@ async function checkUser(req, res) {
   }
 }
 
-async function createTransaction(userId, objects) {
-  // const transaction = await sequelize.Transaction();
-  console.log(userId, objects);
-  try {
-    // Create records for each object within the transaction
-    // await Promise.all(
-    await objects.map(async (object) => {
-      await UserCategory.create({
-        userId: userId,
-        categoryId: object.id,
-      });
-    });
-    // );
-
-    // Commit the transaction if all operations are successful
-    // await transaction.commit();
-
-    console.log("Transaction completed successfully.");
-  } catch (error) {
-    // Rollback the transaction if any error occurs
-    // await transaction.rollback();
-
-    console.error("Transaction failed:", error);
-  }
-}
-
-// get user with transaction
-async function getUser(req, res) {
-  const { userId } = req.params;
-  try {
-    const user = await User.findByPk(userId, {
-      include: Transaction,
-    });
-    return res.json(user);
-  } catch (err) {
-    return res.status(400).json({ error: true, msg: err });
-  }
-}
 // get user category
 async function getUserCategories(req, res) {
   const { userId } = req.params;
@@ -140,7 +99,6 @@ module.exports = {
   getAllTransaction,
   getAllIncomeExpense,
   getAllBudget,
-  getUser,
   getUserCategories,
   updateUser,
 };

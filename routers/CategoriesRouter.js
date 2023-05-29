@@ -3,12 +3,6 @@ const categoryController = require("../controllers/CategoriesController");
 
 const router = express.Router();
 
-// Get all categories
-router.get("/", categoryController.getAllCategory);
-
-// Get all user_categories
-router.get("/usercategories", categoryController.getAllUserCategory);
-
 // Add category -  USED
 router.post("/new", categoryController.newCategory);
 

@@ -16,22 +16,6 @@ async function getNotifications(req, res) {
   }
 }
 
-async function addNotification(req, res) {
-  const { userId, title, description, isRead, date } = req.body;
-  try {
-    const newNotification = await Notification.create({
-      userId: userId,
-      title: title,
-      description: description,
-      isRead: isRead,
-      date: date,
-    });
-    return res.json(newNotification);
-  } catch (err) {
-    return res.status(400).json({ error: true, msg: err });
-  }
-}
-
 async function editNotification(req, res) {
   try {
     let notificationToAdd = req.body;
@@ -66,7 +50,6 @@ async function deleteNotification(req, res) {
 
 module.exports = {
   getNotifications,
-  addNotification,
   editNotification,
   deleteNotification,
 };

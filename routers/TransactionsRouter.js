@@ -3,9 +3,6 @@ const transactionController = require("../controllers/TransactionsController");
 
 const router = express.Router();
 
-// Get transactions from a user
-router.get("/:userId", transactionController.getTransaction);
-
 // Get transactions from a user for the year - USED
 router.get("/:userId/:year", transactionController.getYearlyTransactions); //should change to query????
 
@@ -13,12 +10,6 @@ router.get("/:userId/:year", transactionController.getYearlyTransactions); //sho
 router.get(
   "/:userId/:month/:year",
   transactionController.getTransactionForMonth //should change to query???
-);
-
-// get total YTD
-router.get(
-  "/total/:userId:/:year/:incomeExpenseId",
-  transactionController.getYtdTransactions
 );
 
 // Add transaction - USED

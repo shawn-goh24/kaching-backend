@@ -2,24 +2,7 @@ const db = require("../db/models/index");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-const { User, Transaction, IncomeExpense, Budget, Category } = db;
-
-async function getTransaction(req, res) {
-  const { userId } = req.params;
-  try {
-    const transactions = await Transaction.findAll({
-      where: { userId: userId },
-      include: Category,
-      order: [
-        ["date", "DESC"],
-        ["id", "DESC"],
-      ],
-    });
-    return res.json(transactions);
-  } catch (err) {
-    return res.status(400).json({ error: true, msg: err });
-  }
-}
+const { Transaction, Category } = db;
 
 async function getYearlyTransactions(req, res) {
   const { userId, year } = req.params;
@@ -109,11 +92,11 @@ async function editTransaction(req, res) {
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
             month
-          ), // replace 4 with the month number you want to find
+          ),
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
             year
-          ), // replace 2023 with the year you want to find
+          ),
         ],
       },
       include: Category,
@@ -136,11 +119,11 @@ async function deleteTransaction(req, res) {
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
             month
-          ), // replace 4 with the month number you want to find
+          ),
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
             year
-          ), // replace 2023 with the year you want to find
+          ),
         ],
       },
       include: Category,
@@ -151,37 +134,10 @@ async function deleteTransaction(req, res) {
   }
 }
 
-async function getYtdTransactions(req, res) {
-  console.log("here");
-  const { userId, year, incomeExpenseId } = req.params;
-  try {
-    const transactions = await Transaction.findAll({
-      where: {
-        userId: userId,
-        [Op.and]: [
-          Sequelize.where(
-            Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
-            year
-          ),
-        ],
-      },
-      include: {
-        model: Category,
-        where: { incomeExpenseId: incomeExpenseId },
-      },
-    });
-    return res.json(transactions);
-  } catch (err) {
-    return res.status(400).json({ error: true, msg: err });
-  }
-}
-
 module.exports = {
   addTransaction,
   editTransaction,
   deleteTransaction,
-  getTransaction,
   getTransactionForMonth,
   getYearlyTransactions,
-  getYtdTransactions,
 };
