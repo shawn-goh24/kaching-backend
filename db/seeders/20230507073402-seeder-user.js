@@ -9,7 +9,7 @@ module.exports = {
         {
           first_name: "Shawn",
           last_name: "Goh",
-          email: "ahshawngoh@gmail.com",
+          email: "shawngoh.dummy@gmail.com",
           image_url: "",
           main_currency: "SGD",
           created_at: new Date(),

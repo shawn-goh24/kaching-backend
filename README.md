@@ -46,6 +46,7 @@ npm i
 4. Next run database migration, and seeders before starting. Make sure no error.
 
 ```
+npx sequelize db:create
 npx sequelize db:migrate
 npx sequelize db:seed:all
 ```
