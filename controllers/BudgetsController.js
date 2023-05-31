@@ -14,11 +14,11 @@ async function getAllBudget(req, res) {
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('MONTH FROM "date"')),
             month
-          ), // replace 4 with the month number you want to find
+          ),
           Sequelize.where(
             Sequelize.fn("EXTRACT", Sequelize.literal('YEAR FROM "date"')),
             year
-          ), // replace 2023 with the year you want to find
+          ),
         ],
       },
       include: Category,

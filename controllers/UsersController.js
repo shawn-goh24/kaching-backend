@@ -94,8 +94,6 @@ async function getAllBudget(req, res) {
 }
 
 const createTransaction = (id, categories) => {
-  // console.log(categories);
-  // console.log(id);
   categories.forEach(async (category, index) => {
     const newUserCategory = await UserCategory.create({
       userId: id,

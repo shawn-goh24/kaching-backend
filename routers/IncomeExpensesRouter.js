@@ -3,7 +3,7 @@ const incomeExpenseController = require("../controllers/IncomeExpensesController
 
 const router = express.Router();
 
-// Get all income expense - USED
+// Get all income expense
 router.get("/", incomeExpenseController.getAllIncomeExpense);
 
 module.exports = router;

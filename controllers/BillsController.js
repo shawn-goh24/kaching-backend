@@ -29,21 +29,21 @@ async function addBill(req, res) {
       interval: interval,
     });
     const bill = JSON.parse(JSON.stringify(newBill));
-    if (bill.interval === "Monthly") {
-      const date = new Date(bill.date).getDate();
-      cron.schedule(`*/${date} * * * * *`, () => {
-        const message = `Remember to pay your ${name} bill today!`;
-        sendNotification(
-          userId,
-          `${name} bill notice!`,
-          message,
-          false,
-          new Date(bill.date)
-        );
-        sendEmail(user, message);
-        console.log("send email", bill.name, new Date().toLocaleTimeString());
-      });
-    }
+    // if (bill.interval === "Monthly") {
+    //   const date = new Date(bill.date).getDate();
+    //   cron.schedule(`*/${date} * * * * *`, () => {
+    //     const message = `Remember to pay your ${name} bill today!`;
+    //     sendNotification(
+    //       userId,
+    //       `${name} bill notice!`,
+    //       message,
+    //       false,
+    //       new Date(bill.date)
+    //     );
+    //     sendEmail(user, message);
+    //     console.log("send email", bill.name, new Date().toLocaleTimeString());
+    //   });
+    // }
     return res.json(newBill);
   } catch (err) {
     return res.status(400).json({ error: true, msg: err });
@@ -84,7 +84,7 @@ async function deleteBill(req, res) {
 
 const sendNotification = async (userId, title, description, isRead, date) => {
   try {
-    const newNotification = await Notification.create({
+    await Notification.create({
       userId: userId,
       title: title,
       description: description,
@@ -92,10 +92,8 @@ const sendNotification = async (userId, title, description, isRead, date) => {
       date: date,
     });
     console.log("Notification sent!");
-    // return res.json(newNotification);
   } catch (err) {
     console.log(err);
-    // return res.status(400).json({ error: true, msg: err });
   }
 };
 
@@ -106,7 +104,6 @@ const sendEmail = (user, message) => {
     from: "ahshawngoh@gmail.com", // Change to your verified sender
     subject: "Bill Reminder!!!",
     text: `Hello ${user.firstName},\n\n${message}\n\nRegards,\nKaching Team `,
-    // html: "<strong>and easy to do anywhere, even with Node.js</strong>",
   };
   sgMail
     .send(msg)

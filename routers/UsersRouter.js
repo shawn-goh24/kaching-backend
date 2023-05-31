@@ -4,9 +4,9 @@ const usersController = require("../controllers/UsersController");
 const router = express.Router();
 
 // get a single user based on ID w/ transactions
-router.post("/home", usersController.checkUser); // USED
-router.get("/category/:userId", usersController.getUserCategories); // used, USED
-router.put("/edit/:userId", usersController.updateUser); //USED
+router.post("/home", usersController.checkUser);
+router.get("/category/:userId", usersController.getUserCategories);
+router.put("/edit/:userId", usersController.updateUser);
 
 router.get("/", usersController.getAllUser);
 router.get("/:userId/transaction", usersController.getAllTransaction);

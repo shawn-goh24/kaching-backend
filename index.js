@@ -2,7 +2,6 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-var cron = require("node-cron");
 
 // Auth0
 const { auth } = require("express-oauth2-jwt-bearer");
@@ -40,25 +39,3 @@ app.use("/notification", checkJwt, notificationRouter);
 app.listen(PORT, () => {
   console.log(`Application listening to port ${PORT}`);
 });
-
-// const db = require("./db/models/index");
-// const { Bill } = db;
-
-// async function getAllBills(req, res) {
-//   try {
-//     const bills = await Bill.findAll();
-//     const billList = JSON.parse(JSON.stringify(bills));
-//     billList.forEach((bill) => {
-//       if (bill.interval === "Monthly") {
-//         const date = new Date(bill.date).getDate();
-//         cron.schedule(`*/${date} * * * * *`, () => {
-//           console.log("send email", bill.name, new Date().toLocaleTimeString());
-//         });
-//       }
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-
-// getAllBills();
